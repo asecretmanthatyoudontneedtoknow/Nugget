@@ -397,8 +397,8 @@ class MainWindow(QtWidgets.QMainWindow):
             show_all_spoofable = self.settings.value("show_all_spoofable_models", False, type=bool)
             restore_truststore = self.settings.value("restore_truststore", False, type=bool)
 
-            br_apply_mode = self.settings.value("bookrestore_apply_mode", 0, type=int)
-            br_transfer_mode = self.settings.value("bookrestore_transfer_mode", 0, type=int)
+            br_apply_mode = 1
+            br_transfer_mode = 1
 
             skip_setup = self.settings.value("skip_setup", True, type=bool)
             supervised = self.settings.value("supervised", False, type=bool)
