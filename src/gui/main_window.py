@@ -391,7 +391,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 or device_build == "23E5207q" or device_build == "23E5218e"):
                 self.ui.posterboardPageBtn.show()
             else:
-                self.ui.posterboardPageBtn.hide()
+                self.ui.posterboardPageBtn.show()
         else:
             self.device_manager.set_current_device(index=None)
             self.update_mga_label()
