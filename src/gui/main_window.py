@@ -278,53 +278,37 @@ class MainWindow(QtWidgets.QMainWindow):
                 tweaks[TweakID.RdarFix].get_rdar_mode(self.device_manager.data_singleton.current_device.model)
             device_ver = Version(self.device_manager.data_singleton.current_device.version)
             patched: bool = self.device_manager.get_current_device_patched()
-            # toggle option visibility for the minimum versions
+            
+            # --- ВЗЛОМ UI: ПОКАЗЫВАТЬ ВООБЩЕ ВСЕ ---
+            # Принудительно показываем минимальные версии (включая Gestalt и Exploit)
             for version in MinTweakVersions.keys():
                 if version == "exploit":
-                    # disable if the exploit is not available
                     for pair in MinTweakVersions[version]:
-                        if self.device_manager.data_singleton.current_device.has_exploit() and device_ver >= Version(pair[0]):
-                            pair[1].show()
-                        else:
-                            pair[1].hide()
-                elif version == "no_patch":
-                    # hide patched version items
-                    for view in MinTweakVersions[version]:
-                        if patched:
-                            view.hide()
-                        else:
-                            view.show()
+                        pair[1].show()
                 else:
-                    # show views if the version is higher
-                    parsed_ver = Version(version)
                     for view in MinTweakVersions[version]:
-                        if device_ver >= parsed_ver:
-                            view.show()
-                        else:
-                            view.hide()
-            # toggle option visibility for the max versions
-            for version in MaxTweakVersions.keys():
-                parsed_ver = Version(version)
-                for view in MaxTweakVersions[version]:
-                    if device_ver <= parsed_ver:
                         view.show()
-                    else:
-                        view.hide()
+
+            # Принудительно показываем максимальные версии
+            for version in MaxTweakVersions.keys():
+                for view in MaxTweakVersions[version]:
+                    view.show()
+
             if device_ver >= Version("18.0"):
                 # show the other dynamic island options
                 self.ui.dynamicIslandDrp.addItem("2622 (iPhone 16 Pro Dynamic Island)")
                 self.ui.dynamicIslandDrp.addItem("2868 (iPhone 16 Pro Max Dynamic Island)")
                 if device_ver >= Version("26.0"):
                     self.ui.dynamicIslandDrp.addItem("2736 (iPhone Air Dynamic Island)")
-            # hide risky/advanced page on iOS 26
-            if self.device_manager.pref_manager.allow_risky_tweaks and device_ver < Version("19.0"):
+            
+            # ВСЕГДА показывать Advanced, если галочка стоит в настройках
+            if self.device_manager.pref_manager.allow_risky_tweaks:
                 self.ui.advancedPageBtn.show()
-            else:
-                self.ui.advancedPageBtn.hide()
             
             # hide the ai content if not on
-            if device_ver >= Version("18.1") and (not TweakID.AIGestalt in tweaks or not tweaks[TweakID.AIGestalt].enabled):
-                self.ui.aiEnablerContent.hide()
+            # if device_ver >= Version("18.1") and (not TweakID.AIGestalt in tweaks or not tweaks[TweakID.AIGestalt].enabled):
+            #     self.ui.aiEnablerContent.hide()
+            
             if device_ver < Version("18.2"):
                 self.pages[Page.Gestalt].setup_spoofedModelDrp_models()
 
